@@ -1,18 +1,14 @@
 package be.polyscripts.contactmanagerapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-@NoArgsConstructor
-@Getter
-@Setter
+@Builder
+@EqualsAndHashCode @AllArgsConstructor @NoArgsConstructor @Getter @Setter
 @Entity
 @Table(name = "company")
 public class Company {

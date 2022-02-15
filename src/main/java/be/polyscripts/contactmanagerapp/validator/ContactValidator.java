@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 public class ContactValidator {
 
     public void validate (Contact contact) {
-
         if(isFreelanceWithNoTVA(contact)) {
             throw new FreelanceWithNoTVAException("Freelance contact must have a TVA number !");
         }

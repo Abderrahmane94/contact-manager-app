@@ -22,7 +22,6 @@ public class ContactService {
         return contactRepository.save(contact);
     }
 
-
     public Contact updateContact(Contact contact) {
         return contactRepository.save(contact);
     }
@@ -32,8 +31,5 @@ public class ContactService {
     }
 
     public List<Contact> findAllContacts() { return contactRepository.findAll();}
-
-
-
 
 }
