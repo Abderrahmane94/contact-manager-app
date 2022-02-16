@@ -3,11 +3,11 @@ package be.polyscripts.contactmanagerapp.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Builder
-@AllArgsConstructor @EqualsAndHashCode @NoArgsConstructor @Getter @Setter
+@AllArgsConstructor @NoArgsConstructor @Getter @Setter
 @Entity
 @Table(name = "contact")
 public class Contact {
@@ -31,11 +31,17 @@ public class Contact {
     @Column(name = "type")
     private String type;
 
+    @ManyToMany(mappedBy = "contacts")
+    private Set<Company> companies = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(name = "contact_companies",
-            joinColumns = @JoinColumn(name = "contact_id"),
-            inverseJoinColumns = @JoinColumn(name = "companies_id"))
-    private List<Company> companies = new ArrayList<>();
+    public void addCompany(Company company) {
+        this.companies.add(company);
+        company.getContacts().add(this);
+    }
+
+    public void removeCompany(Company company) {
+        this.companies.remove(company);
+        company.getContacts().remove(this);
+    }
 
 }

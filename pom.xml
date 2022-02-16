@@ -12,7 +12,7 @@
     <artifactId>contact-manager-app</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>contact-manager-app</name>
-    <description>contact-manager-app</description>
+    <description>Mini project - Contact manager app</description>
     <properties>
         <java.version>11</java.version>
     </properties>

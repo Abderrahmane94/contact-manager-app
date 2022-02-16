@@ -2,7 +2,6 @@ package be.polyscripts.contactmanagerapp.service;
 
 import be.polyscripts.contactmanagerapp.model.Contact;
 import be.polyscripts.contactmanagerapp.repo.ContactRepository;
-import be.polyscripts.contactmanagerapp.ressource.ContactResource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -11,15 +10,16 @@ import org.mockito.Mock;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 class ContactServiceTest {
 
-    @Mock
-    ContactRepository contactRepository;
+    @Mock private ContactRepository contactRepository;
 
     @InjectMocks
     ContactService contactService;
@@ -48,7 +48,7 @@ class ContactServiceTest {
     }
 
     @Test
-    void shouldAddContact() {
+    void canAddContact() {
         Contact contact = new Contact().builder().firstName("Amin").lastName("belkadi").address("Alger").type("employe").build();
 
         when(contactRepository.save(contact)).thenReturn(contact);
@@ -60,7 +60,7 @@ class ContactServiceTest {
     }
 
     @Test
-    void shouldUpdateContact() {
+    void canUpdateContact() {
 
         Contact contact = new Contact().builder().address("Alger").tva("TVA BE 951 753 852").build();
 
@@ -75,6 +75,5 @@ class ContactServiceTest {
         assertEquals(contact, contact2);
         assertEquals("Bouzareha", contact2.getAddress());
     }
-
 
 }

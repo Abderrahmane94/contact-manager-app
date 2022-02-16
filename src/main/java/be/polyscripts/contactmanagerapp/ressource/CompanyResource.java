@@ -4,6 +4,11 @@ import be.polyscripts.contactmanagerapp.model.Company;
 import be.polyscripts.contactmanagerapp.model.Contact;
 import be.polyscripts.contactmanagerapp.service.CompanyService;
 import be.polyscripts.contactmanagerapp.service.ContactService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.hibernate.annotations.common.util.impl.LoggerFactory;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/company")
+@Tag(name = "Company", description = "Endpoints for managing company")
 public class CompanyResource {
 
     private final CompanyService companyService;
@@ -29,6 +35,14 @@ public class CompanyResource {
     }
 
     @GetMapping("/all")
+    @Operation(summary = "Get all companies", description = "Find all companies in the application",
+               tags="Company",responses = {
+                                @ApiResponse(
+                                        description = "Success",
+                                        responseCode = "200",
+                                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = Company.class))),
+                                @ApiResponse(description = "Internal error", responseCode = "500", content = @Content)
+                                })
     public ResponseEntity<List<Company>> getAllCompanies() {
         LOGGER.info(" Entering getAllCompanies API");
         List<Company> companies = companyService.findAllCompanies();
@@ -37,6 +51,7 @@ public class CompanyResource {
     }
 
     @PostMapping("/add")
+    @Operation(summary = "Add a new company")
     public ResponseEntity<Company> addCompany(@RequestBody Company company) {
         LOGGER.info(" Entering addCompany API");
         Company newCompany = companyService.addCompany(company);
@@ -45,6 +60,7 @@ public class CompanyResource {
     }
 
     @PutMapping("/update")
+    @Operation(summary = "Update an existing company")
     public ResponseEntity<Company> updateCompany(@RequestBody Company company) {
         LOGGER.info(" Entering updateCompany API");
         Company updateCompany = companyService.updateCompany(company);
@@ -53,6 +69,7 @@ public class CompanyResource {
     }
 
     @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Delete a company by ID")
     public ResponseEntity<?> deleteCompany(@PathVariable("id") Long id) {
         LOGGER.info(" Entering deleteCompany API");
         companyService.deleteCompany(id);
@@ -61,11 +78,11 @@ public class CompanyResource {
     }
 
     @PostMapping("/{companyId}/contact")
+    @Operation(summary = "Add a contact to a company")
     public ResponseEntity<Contact> addContactToCompany(@PathVariable("companyId") Long companyId, @RequestBody Contact contactRequest) {
         LOGGER.info(" Entering addContactToCompany API");
         Company company = companyService.findCompany(companyId);
-        contactRequest.getCompanies().add(company);
-        company.getContacts().add(contactRequest);
+        contactRequest.addCompany(company);
         Contact updatedContact = contactService.updateContact(contactRequest);
         LOGGER.info(" Leaving addContactToCompany API");
         return new ResponseEntity<>(updatedContact, HttpStatus.OK);

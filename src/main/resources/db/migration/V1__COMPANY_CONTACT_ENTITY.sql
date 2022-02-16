@@ -8,6 +8,13 @@ CREATE TABLE company
     CONSTRAINT pk_company PRIMARY KEY (id)
 );
 
+CREATE TABLE company_contacts
+(
+    company_id  BIGINT NOT NULL,
+    contacts_id BIGINT NOT NULL,
+    CONSTRAINT pk_company_contacts PRIMARY KEY (company_id, contacts_id)
+);
+
 CREATE TABLE contact
 (
     id         BIGINT       NOT NULL,
@@ -19,15 +26,8 @@ CREATE TABLE contact
     CONSTRAINT pk_contact PRIMARY KEY (id)
 );
 
-CREATE TABLE contact_companies
-(
-    companies_id BIGINT NOT NULL,
-    contact_id   BIGINT NOT NULL,
-    CONSTRAINT pk_contact_companies PRIMARY KEY (companies_id, contact_id)
-);
+ALTER TABLE company_contacts
+    ADD CONSTRAINT fk_comcon_on_company FOREIGN KEY (company_id) REFERENCES company (id);
 
-ALTER TABLE contact_companies
-    ADD CONSTRAINT fk_concom_on_company FOREIGN KEY (companies_id) REFERENCES company (id);
-
-ALTER TABLE contact_companies
-    ADD CONSTRAINT fk_concom_on_contact FOREIGN KEY (contact_id) REFERENCES contact (id);
+ALTER TABLE company_contacts
+    ADD CONSTRAINT fk_comcon_on_contact FOREIGN KEY (contacts_id) REFERENCES contact (id);

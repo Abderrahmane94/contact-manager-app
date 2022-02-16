@@ -6,5 +6,5 @@ INSERT INTO contact (id, first_name, last_name, address, tva, type)
 VALUES (1, 'Amin', 'Belkadi', 'Bouzareha', '', 'Employe');
 INSERT INTO contact (id, first_name, last_name, address, tva, type)
 VALUES (2, 'Nadir', 'Benhoucine', 'Alger', 'TVA BE 965 753 264', 'freelance');
-INSERT INTO contact_companies (companies_id, contact_id)
+INSERT INTO company_contacts (company_id, contacts_id)
 VALUES (1, 1);

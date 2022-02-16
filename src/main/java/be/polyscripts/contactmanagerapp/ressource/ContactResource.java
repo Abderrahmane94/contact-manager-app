@@ -3,6 +3,11 @@ package be.polyscripts.contactmanagerapp.ressource;
 import be.polyscripts.contactmanagerapp.model.Contact;
 import be.polyscripts.contactmanagerapp.service.ContactService;
 import be.polyscripts.contactmanagerapp.validator.ContactValidator;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.hibernate.annotations.common.util.impl.LoggerFactory;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/contact")
+@Tag(name = "Contact", description = "Endpoints for managing contact")
 public class ContactResource {
 
     private final ContactService contactService;
@@ -28,6 +34,14 @@ public class ContactResource {
     }
 
     @GetMapping("/all")
+    @Operation(summary = "Get all contacts", description = "Find all contacts in the application",
+            tags="Contact",responses = {
+            @ApiResponse(
+                    description = "Success",
+                    responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Contact.class))),
+            @ApiResponse(description = "Internal error", responseCode = "500", content = @Content)
+    })
     public ResponseEntity<List<Contact>> getAllContacts() {
         LOGGER.info(" Entering getAllContacts API");
         List<Contact> contacts = contactService.findAllContacts();
@@ -36,6 +50,7 @@ public class ContactResource {
     }
 
     @PostMapping("/add")
+    @Operation(summary = "Add a new contact")
     public ResponseEntity<Contact> addContact(@RequestBody Contact contact) {
         LOGGER.info(" Entering addContact API");
         contactValidator.validate(contact);
@@ -45,6 +60,7 @@ public class ContactResource {
     }
 
     @PutMapping("/update")
+    @Operation(summary = "Update an existing contact")
     public ResponseEntity<Contact> updateContact(@RequestBody Contact contact) {
         LOGGER.info(" Entering updateContact API");
         contactValidator.validate(contact);
@@ -54,6 +70,7 @@ public class ContactResource {
     }
 
     @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Delete a contact by ID")
     public ResponseEntity<?> deleteContact(@PathVariable("id") Long id) {
         LOGGER.info(" Entering deleteContact API");
         contactService.deleteContact(id);

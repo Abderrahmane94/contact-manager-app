@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Builder
-@EqualsAndHashCode @AllArgsConstructor @NoArgsConstructor @Getter @Setter
+@AllArgsConstructor @NoArgsConstructor @Getter @Setter
 @Entity
 @Table(name = "company")
 public class Company {
@@ -24,7 +24,10 @@ public class Company {
     private String tva; // example: TVA BE 0123 456 789
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "companies")
-    private List<Contact> contacts = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(name = "company_contacts",
+            joinColumns = @JoinColumn(name = "company_id"),
+            inverseJoinColumns = @JoinColumn(name = "contacts_id"))
+    private Set<Contact> contacts = new HashSet<>();
 
 }

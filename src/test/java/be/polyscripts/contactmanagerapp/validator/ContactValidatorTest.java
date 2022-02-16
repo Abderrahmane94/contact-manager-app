@@ -4,7 +4,7 @@ import be.polyscripts.contactmanagerapp.exceptions.FreelanceWithNoTVAException;
 import be.polyscripts.contactmanagerapp.model.Contact;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 class ContactValidatorTest {

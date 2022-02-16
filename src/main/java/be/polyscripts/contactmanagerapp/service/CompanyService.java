@@ -1,6 +1,7 @@
 package be.polyscripts.contactmanagerapp.service;
 
 
+import be.polyscripts.contactmanagerapp.exceptions.CompanyNotFoundException;
 import be.polyscripts.contactmanagerapp.model.Company;
 import be.polyscripts.contactmanagerapp.repo.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,10 @@ public class CompanyService {
     }
 
     public void deleteCompany(Long id) {
+        if (!companyRepository.existsById(id)) {
+            throw new CompanyNotFoundException(
+                    "Company with id " + id + " does not exists");
+        }
         companyRepository.deleteById(id);
     }
 
