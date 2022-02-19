@@ -4,6 +4,10 @@ package be.polyscripts.contactmanagerapp.service;
 import be.polyscripts.contactmanagerapp.exceptions.CompanyNotFoundException;
 import be.polyscripts.contactmanagerapp.model.Company;
 import be.polyscripts.contactmanagerapp.repo.CompanyRepository;
+import be.polyscripts.contactmanagerapp.ressource.ContactResource;
+import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.common.util.impl.LoggerFactory;
+import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,13 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class CompanyService {
 
-    private final CompanyRepository companyRepository;
 
-    @Autowired
-    public CompanyService(CompanyRepository companyRepository) {this.companyRepository = companyRepository;}
+    private final CompanyRepository companyRepository;
 
     public Company addCompany(Company company) {
         return companyRepository.save(company);

@@ -13,6 +13,7 @@ import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class ContactResource {
         this.contactValidator = contactValidator;
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/all")
     @Operation(summary = "Get all contacts", description = "Find all contacts in the application",
             tags="Contact",responses = {
@@ -49,6 +51,7 @@ public class ContactResource {
         return new ResponseEntity<>(contacts, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
     @Operation(summary = "Add a new contact")
     public ResponseEntity<Contact> addContact(@RequestBody Contact contact) {
@@ -59,6 +62,7 @@ public class ContactResource {
         return new ResponseEntity<>(newContact, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update")
     @Operation(summary = "Update an existing contact")
     public ResponseEntity<Contact> updateContact(@RequestBody Contact contact) {
@@ -69,6 +73,7 @@ public class ContactResource {
         return new ResponseEntity<>(updateContact, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "Delete a contact by ID")
     public ResponseEntity<?> deleteContact(@PathVariable("id") Long id) {
