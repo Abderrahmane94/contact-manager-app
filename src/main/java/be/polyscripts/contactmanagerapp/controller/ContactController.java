@@ -1,4 +1,4 @@
-package be.polyscripts.contactmanagerapp.ressource;
+package be.polyscripts.contactmanagerapp.controller;
 
 import be.polyscripts.contactmanagerapp.model.Contact;
 import be.polyscripts.contactmanagerapp.service.ContactService;
@@ -8,8 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.hibernate.annotations.common.util.impl.LoggerFactory;
-import org.jboss.logging.Logger;
+import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,19 +16,19 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/contact")
+@RequestMapping("/api/v1/contact")
 @Tag(name = "Contact", description = "Endpoints for managing contact")
-public class ContactResource {
+@CommonsLog
+public class ContactController {
 
     private final ContactService contactService;
     private final ContactValidator contactValidator;
 
-    private final Logger LOGGER = LoggerFactory.logger(ContactResource.class);
-
     @Autowired
-    public ContactResource(ContactService contactService, ContactValidator contactValidator) {
+    public ContactController(ContactService contactService, ContactValidator contactValidator) {
         this.contactService = contactService;
         this.contactValidator = contactValidator;
     }
@@ -37,7 +36,7 @@ public class ContactResource {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/all")
     @Operation(summary = "Get all contacts", description = "Find all contacts in the application",
-            tags="Contact",responses = {
+            tags = "Contact", responses = {
             @ApiResponse(
                     description = "Success",
                     responseCode = "200",
@@ -45,9 +44,9 @@ public class ContactResource {
             @ApiResponse(description = "Internal error", responseCode = "500", content = @Content)
     })
     public ResponseEntity<List<Contact>> getAllContacts() {
-        LOGGER.info(" Entering getAllContacts API");
+        log.info(" Entering getAllContacts API");
         List<Contact> contacts = contactService.findAllContacts();
-        LOGGER.info(" Leaving getAllContacts API");
+        log.info(" Leaving getAllContacts API");
         return new ResponseEntity<>(contacts, HttpStatus.OK);
     }
 
@@ -55,10 +54,10 @@ public class ContactResource {
     @PostMapping("/add")
     @Operation(summary = "Add a new contact")
     public ResponseEntity<Contact> addContact(@RequestBody Contact contact) {
-        LOGGER.info(" Entering addContact API");
+        log.info(" Entering addContact API");
         contactValidator.validate(contact);
         Contact newContact = contactService.addContact(contact);
-        LOGGER.info(" Leaving addContact API");
+        log.info(" Leaving addContact API");
         return new ResponseEntity<>(newContact, HttpStatus.CREATED);
     }
 
@@ -66,21 +65,20 @@ public class ContactResource {
     @PutMapping("/update")
     @Operation(summary = "Update an existing contact")
     public ResponseEntity<Contact> updateContact(@RequestBody Contact contact) {
-        LOGGER.info(" Entering updateContact API");
+        log.info(" Entering updateContact API");
         contactValidator.validate(contact);
         Contact updateContact = contactService.updateContact(contact);
-        LOGGER.info(" Leaving updateContact API");
+        log.info(" Leaving updateContact API");
         return new ResponseEntity<>(updateContact, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{uuid}")
     @Operation(summary = "Delete a contact by ID")
-    public ResponseEntity<?> deleteContact(@PathVariable("id") Long id) {
-        LOGGER.info(" Entering deleteContact API");
-        contactService.deleteContact(id);
-        LOGGER.info(" Leaving deleteContact API");
+    public ResponseEntity<?> deleteContact(@PathVariable("uuid") UUID uuid) {
+        log.info(" Entering deleteContact API");
+        contactService.deleteContact(uuid);
+        log.info(" Leaving deleteContact API");
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }

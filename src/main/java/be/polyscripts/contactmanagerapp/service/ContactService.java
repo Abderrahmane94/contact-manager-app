@@ -1,54 +1,21 @@
 package be.polyscripts.contactmanagerapp.service;
 
-
-import be.polyscripts.contactmanagerapp.exceptions.ContactNotFoundException;
-import be.polyscripts.contactmanagerapp.model.Company;
 import be.polyscripts.contactmanagerapp.model.Contact;
-import be.polyscripts.contactmanagerapp.repo.ContactRepository;
-import be.polyscripts.contactmanagerapp.validator.ContactValidator;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
-@Service
-@RequiredArgsConstructor
-@Transactional
-public class ContactService {
+public interface ContactService {
 
-    private final ContactRepository contactRepository;
-    private final ContactValidator contactValidator = new ContactValidator();
+    Contact addContact(Contact contact);
 
-    public Contact addContact(Contact contact) {
-        contactValidator.validate(contact);
-        return contactRepository.save(contact);
-    }
+    Contact updateContact(Contact contact);
 
-    public Contact updateContact(Contact contact) {
-        return contactRepository.save(contact);
-    }
+    void deleteContact(UUID uuid);
 
-    public void deleteContact(Long id) {
-        if (!contactRepository.existsById(id)) {
-            throw new ContactNotFoundException(
-                    "Contact with id " + id + " does not exists");
-        }
-        Contact contact = this.findContactByID(id);
-        if (contact.getCompanies() != null && !contact.getCompanies().isEmpty()) {
-            for (Company company : contact.getCompanies()) {
-                contact.removeCompany(company);
-            }
-        }
-        contactRepository.deleteById(id);
-    }
+    List<Contact> findAllContacts();
 
-    public List<Contact> findAllContacts() {
-        return contactRepository.findAll();
-    }
+    Contact findContactByID(Long id);
 
-    public Contact findContactByID(Long id) {
-        return contactRepository.findContactById(id);
-    }
+    Contact findContactByUuid(UUID uuid);
 }

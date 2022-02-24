@@ -1,7 +1,7 @@
 package be.polyscripts.contactmanagerapp.service;
 
 import be.polyscripts.contactmanagerapp.model.Contact;
-import be.polyscripts.contactmanagerapp.repo.ContactRepository;
+import be.polyscripts.contactmanagerapp.repository.ContactRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -9,20 +9,20 @@ import org.mockito.Mock;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 class ContactServiceTest {
 
-    @Mock private ContactRepository contactRepository;
+    @Mock
+    private ContactRepository contactRepository;
 
     @InjectMocks
-    ContactService contactService;
+    ContactServiceImpl contactService;
 
     @BeforeEach
     void init() {
@@ -44,7 +44,6 @@ class ContactServiceTest {
         assertEquals(2, contactListReturn.size());
         assertEquals(contact1, contactListReturn.get(0));
         assertEquals(contact2, contactListReturn.get(1));
-
     }
 
     @Test
@@ -58,22 +57,4 @@ class ContactServiceTest {
         assertNotNull(contact1);
         assertEquals(contact, contact1);
     }
-
-    @Test
-    void canUpdateContact() {
-
-        Contact contact = new Contact().builder().address("Alger").tva("TVA BE 951 753 852").build();
-
-        when(contactRepository.save(contact)).thenReturn(contact);
-
-        Contact contact1 = contact;
-        contact1.setAddress("Bouzareha");
-
-        Contact contact2 = contactService.updateContact(contact1);
-
-        assertNotNull(contact2);
-        assertEquals(contact, contact2);
-        assertEquals("Bouzareha", contact2.getAddress());
-    }
-
 }

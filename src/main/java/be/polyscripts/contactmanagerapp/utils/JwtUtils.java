@@ -26,7 +26,6 @@ public class JwtUtils {
     @Value("${jwt.authorities.key}")
     public String AUTHORITIES_KEY;
 
-
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -82,6 +81,4 @@ public class JwtUtils {
 
         return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
     }
-
-
 }

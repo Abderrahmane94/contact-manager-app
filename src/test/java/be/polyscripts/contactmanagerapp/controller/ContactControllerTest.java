@@ -1,9 +1,8 @@
-package be.polyscripts.contactmanagerapp.ressource;
+package be.polyscripts.contactmanagerapp.controller;
 
 import be.polyscripts.contactmanagerapp.model.Contact;
-import be.polyscripts.contactmanagerapp.service.ContactService;
+import be.polyscripts.contactmanagerapp.service.ContactServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -16,14 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-
-class ContactResourceTest {
+class ContactControllerTest {
 
     @Mock
-    ContactService contactService;
+    ContactServiceImpl contactService;
 
     @InjectMocks
-    ContactResource contactResource;
+    ContactController contactResource;
 
     @BeforeEach
     void init() {
@@ -53,10 +51,10 @@ class ContactResourceTest {
 
         Contact contact1 = new Contact().builder().address("Alger").tva("TVA BE 951 753 852").build();
 
-        doNothing().when(contactService).deleteContact(contact1.getId());
+        doNothing().when(contactService).deleteContact(contact1.getUuid());
 
-        contactResource.deleteContact(contact1.getId());
+        contactResource.deleteContact(contact1.getUuid());
 
-        verify(contactService, times(1)).deleteContact(contact1.getId());
+        verify(contactService, times(1)).deleteContact(contact1.getUuid());
     }
 }
