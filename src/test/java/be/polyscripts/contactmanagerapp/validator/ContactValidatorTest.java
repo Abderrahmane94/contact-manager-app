@@ -20,8 +20,6 @@ class ContactValidatorTest {
 
         Contact contact = Contact.builder().firstName("Amin").lastName("Belkadi").address("Bouzareha").type("freelance").build();
 
-        assertThrows(FreelanceWithNoTVAException.class,()->contactValidator.validate(contact));
-
+        assertThrows(FreelanceWithNoTVAException.class, () -> contactValidator.validate(contact));
     }
-
 }

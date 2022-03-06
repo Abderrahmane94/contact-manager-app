@@ -1,4 +1,4 @@
-package be.polyscripts.contactmanagerapp.api;
+package be.polyscripts.contactmanagerapp.controller;
 
 import be.polyscripts.contactmanagerapp.dto.AuthenticationRequest;
 import be.polyscripts.contactmanagerapp.dto.AuthenticationResponse;
@@ -11,13 +11,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class FrontApi {
+@RequestMapping(value = "/api/v1")
+public class FrontController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -25,7 +23,6 @@ public class FrontApi {
     private JwtUtils jwtUtils;
     @Autowired
     private UserService userService;
-
 
     @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authRequest) {
@@ -37,13 +34,10 @@ public class FrontApi {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwtToken = jwtUtils.generateToken(authentication);
         return ResponseEntity.ok(new AuthenticationResponse(jwtToken));
-
     }
 
     @PostMapping("/register")
     public User saveUser(@RequestBody User user) {
         return userService.addUser(user);
     }
-
-
 }

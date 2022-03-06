@@ -2,7 +2,7 @@ package be.polyscripts.contactmanagerapp.service;
 
 import be.polyscripts.contactmanagerapp.exceptions.CompanyNotFoundException;
 import be.polyscripts.contactmanagerapp.model.Company;
-import be.polyscripts.contactmanagerapp.repo.CompanyRepository;
+import be.polyscripts.contactmanagerapp.repository.CompanyRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -11,11 +11,9 @@ import org.mockito.Mock;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -23,9 +21,11 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 class CompanyServiceTest {
 
-    @Mock private CompanyRepository companyRepository;
+    @Mock
+    private CompanyRepository companyRepository;
 
-    @InjectMocks private CompanyService companyService;
+    @InjectMocks
+    CompanyServiceImpl companyService;
 
     @BeforeEach
     void init() {
@@ -63,36 +63,32 @@ class CompanyServiceTest {
 
         Company capturedCompany = companyArgumentCaptor.getValue();
 
-        assertThat(capturedCompany).isEqualTo(company);
+        assertEquals(capturedCompany, company);
     }
 
     @Test
     void canDeleteCompany() {
         // given
-        long id = 1;
-        given(companyRepository.existsById(id))
+        UUID uuid = UUID.fromString("ba3d99c9-8f1a-4d4f-bdd9-600020f37401");
+        given(companyRepository.existsCompanyByUuid(uuid))
                 .willReturn(true);
         // when
-        companyService.deleteCompany(id);
+        companyService.deleteCompany(uuid);
 
         // then
-        verify(companyRepository).deleteById(id);
+        verify(companyRepository).deleteCompanyByUuid(uuid);
     }
 
     @Test
     void willThrowWhenDeleteCompanyNotFound() {
         // given
-        long id = 1;
-        given(companyRepository.existsById(id))
+        UUID uuid = UUID.fromString("ba3d99c9-8f1a-4d4f-bdd9-600020f37401");
+        given(companyRepository.existsCompanyByUuid(uuid))
                 .willReturn(false);
         // when
         // then
-        assertThatThrownBy(() -> companyService.deleteCompany(id))
-                .isInstanceOf(CompanyNotFoundException.class)
-                .hasMessageContaining("Company with id " + id + " does not exists");
+        assertThrows(CompanyNotFoundException.class, () -> companyService.deleteCompany(uuid), "Company with uuid " + uuid + " does not exists");
 
         verify(companyRepository, never()).deleteById(any());
     }
-
-
 }

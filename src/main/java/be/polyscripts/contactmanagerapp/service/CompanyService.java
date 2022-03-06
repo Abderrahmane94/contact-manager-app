@@ -1,46 +1,21 @@
 package be.polyscripts.contactmanagerapp.service;
 
-
-import be.polyscripts.contactmanagerapp.exceptions.CompanyNotFoundException;
 import be.polyscripts.contactmanagerapp.model.Company;
-import be.polyscripts.contactmanagerapp.repo.CompanyRepository;
-import be.polyscripts.contactmanagerapp.ressource.ContactResource;
-import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.common.util.impl.LoggerFactory;
-import org.jboss.logging.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
-@Service
-@RequiredArgsConstructor
-@Transactional
-public class CompanyService {
+public interface CompanyService {
 
+    Company addCompany(Company company);
 
-    private final CompanyRepository companyRepository;
+    Company updateCompany(Company company);
 
-    public Company addCompany(Company company) {
-        return companyRepository.save(company);
-    }
+    void deleteCompany(UUID uuid);
 
-    public Company updateCompany(Company company) {
-        return companyRepository.save(company);
-    }
+    List<Company> findAllCompanies();
 
-    public void deleteCompany(Long id) {
-        if (!companyRepository.existsById(id)) {
-            throw new CompanyNotFoundException(
-                    "Company with id " + id + " does not exists");
-        }
-        companyRepository.deleteById(id);
-    }
+    Company findCompany(Long companyId);
 
-    public List<Company> findAllCompanies() { return companyRepository.findAll();}
-
-    public Company findCompany(Long companyId) {
-        return companyRepository.findCompanyById(companyId);
-    }
+    Company findCompanyByUuid(UUID uuid);
 }

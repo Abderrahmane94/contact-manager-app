@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-
 public class JwtRequestFilter extends OncePerRequestFilter {
     @Value("${jwt.token.prefix}")
     private String PREFIX;

@@ -1,20 +1,35 @@
 package be.polyscripts.contactmanagerapp.model;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Builder
-@AllArgsConstructor @NoArgsConstructor @Getter @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "contact")
 public class Contact {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    @JsonIgnore
     private Long id;
+
+
+    @Column(name = "uuid", updatable = false, unique = true)
+    private UUID uuid;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -31,6 +46,7 @@ public class Contact {
     @Column(name = "type")
     private String type;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "contacts")
     private Set<Company> companies = new HashSet<>();
 
