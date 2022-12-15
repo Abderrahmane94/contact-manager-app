@@ -1,5 +1,8 @@
 # Contact manager application
-Name:        contact-manager-app Description: An application to manage list contact over many company
+
+Name:        contact-manager-app
+
+Description: An application to manage list contact over many company
 
 # The technologies used
 
@@ -17,7 +20,9 @@ Name:        contact-manager-app Description: An application to manage list cont
 
 To run the application, you should run the following commands:
 
-1- run cmd: mvn clean install 2- run mvn spring-boot:run
+1- run cmd: mvn clean install
+
+2- run mvn spring-boot:run
 
 
 
